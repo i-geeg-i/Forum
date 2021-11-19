@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using HTTP_APi.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -11,52 +12,48 @@ namespace HTTP_APi.Controllers
     [Route("[controller]")]
     public class ForumController : ControllerBase
     {
-        public List<Forum> forums = new List<Forum>();
-
         private readonly ILogger<WeatherForecastController> _logger;
 
         public ForumController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            forums.Add(new Forum(0, new DateTime(), "Добро пожаловать на форум!", "Owner"));
+            KnowledgeCenter.getInstance().topics.Add(new Topic(0, new DateTime(), "Добро пожаловать на форум!", "Owner"));
         }
 
         [HttpGet]
-        public Forum Get()
+        public Topic Get()
         {
-            return forums[0];
+            return KnowledgeCenter.getInstance().topics[0];
         }
         [HttpGet("{id}")]
-        public Forum GetPost([FromRoute] int id)
+        public Topic GettTopic([FromRoute] int id)
         {
-            for (int i = 0; i < forums.Count; i++)
+            KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
+            for (int i = 0; i < knowledgeCenter.topics.Count; i++)
             {
-                if (forums[i].id == id)
+                if (knowledgeCenter.topics[i].id == id)
                 {
-                    return forums[i];
+                    return knowledgeCenter.topics[i];
                 }
 
             }
             HttpContext.Response.StatusCode = 404;
-            return new Forum(-1, new DateTime(), "Неверный номер темы!", "Creator");
+            return new Topic(-1, new DateTime(), "Неверный номер темы!", "Creator");
         }
-        private int CreateId()
+        [HttpPost]
+        public Models.Topic CreateNew([FromQuery] string name, [FromQuery] string title) //I know that I need use DTO!
         {
-            int forReturn = 1;
-            for(int i = 0; i < forums.Count; i++)
-            {
-                if (forums[i].id >= forReturn)
-                {
-                    forReturn = forums[i].id + 1;
-                }
-            }
-            return forReturn;
+            KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
+            knowledgeCenter.topics.Add(new Topic(knowledgeCenter.GetNextId(), DateTime.UtcNow, title, name));
+            return knowledgeCenter.topics[knowledgeCenter.topics.Count-1];
         }
-        [HttpGet("new")]
-        public Forum CreateNew([FromQuery] string name, [FromQuery] string post)
+        [HttpPost("{id}")]
+        public Post CreateNewPost([FromRoute] int id,[FromQuery] string name, [FromQuery] string post) //I know that I need use DTO! For test! I will make it better
         {
-            forums.Add(new Forum(CreateId(), DateTime.UtcNow, post, name));
-            return forums[forums.Count-1];
+            KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
+            Topic topic = knowledgeCenter.topics[id];
+            topic.Posts.Add(new Post(topic.GetNextId(),DateTime.UtcNow,post,name));
+            return topic.Posts[topic.Posts.Count - 1];
         }
     }
 }
