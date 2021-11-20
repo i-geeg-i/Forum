@@ -21,9 +21,9 @@ namespace HTTP_APi.Controllers
         }
 
         [HttpGet]
-        public Topic Get()
+        public List<Topic> Get()
         {
-            return KnowledgeCenter.getInstance().topics[0];
+            return KnowledgeCenter.getInstance().topics;
         }
         [HttpGet("{id}")]
         public Topic GettTopic([FromRoute] int id)
