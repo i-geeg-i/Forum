@@ -23,7 +23,7 @@ namespace HTTP_APi.Controllers
         [HttpGet]
         public List<Topic> Get()
         {
-            return KnowledgeCenter.getInstance().topics;
+            return TopicGetDTO.FromTopic(KnowledgeCenter.getInstance().topics);
         }
         [HttpGet("{id}")]
         public Topic GettTopic([FromRoute] int id)
