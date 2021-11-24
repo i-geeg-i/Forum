@@ -14,6 +14,8 @@ namespace HTTP_APi.Controllers
     {
         private readonly ILogger<WeatherForecastController> _logger;
 
+
+
         public ForumController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
@@ -23,7 +25,7 @@ namespace HTTP_APi.Controllers
         [HttpGet]
         public List<Topic> Get()
         {
-            return TopicGetDTO.FromTopic(KnowledgeCenter.getInstance().topics);
+            return TopicGetDTO.FromTopics(KnowledgeCenter.getInstance().topics);
         }
         [HttpGet("{id}")]
         public Topic GettTopic([FromRoute] int id)

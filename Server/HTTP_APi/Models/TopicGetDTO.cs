@@ -15,7 +15,7 @@ namespace HTTP_APi.Models
         {
             return new Topic(topic.id, topic.Date, topic.Title, topic.Name);
         }
-        public static List<Topic> FromTopic(List<Topic> topics)
+        public static List<Topic> FromTopics(List<Topic> topics)
         {
             List<Topic> topicGets = new List<Topic>();
             for(int i =0; i < topics.Count; i++)

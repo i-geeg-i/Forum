@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HTTP_APi
 {
-    public class KnowledgeCenter
+    public class KnowledgeCenter //TODO DI
     {
         private static KnowledgeCenter instance;
         public List<Topic> topics = new List<Topic>();
