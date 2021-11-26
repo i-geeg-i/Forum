@@ -1,5 +1,10 @@
-﻿using System;
+﻿using HTTP_APi;
+using HTTP_APi.Models;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace HTTTP_API_Client
@@ -28,7 +33,7 @@ namespace HTTTP_API_Client
                 {
                     Console.WriteLine("Введите название темы: ");
                     string nameOfTopic = Console.ReadLine();
-                    await PostTopic(nameOfTopic);
+                    await PostNewTopic(nameOfTopic, Name);
                 }
                 else if (numberFromUser == 4)
                 {
@@ -36,7 +41,7 @@ namespace HTTTP_API_Client
                     int topicId = AskTopicId(1);
                     Console.WriteLine("Введите cодержание поста: ");
                     string textOfPost = Console.ReadLine();
-                    await PostPost(topicId, textOfPost);
+                    await PostNewMessage(topicId, textOfPost, Name);
                 }
             }
         }
@@ -82,26 +87,57 @@ namespace HTTTP_API_Client
         {
             using var client = new HttpClient();
             HttpResponseMessage response = await client.GetAsync("https://localhost:44300/forum/");
+            response.EnsureSuccessStatusCode();
             Console.WriteLine(response);
-            //TODO GetListOfTopics
+            Stream stream = await response.Content.ReadAsStreamAsync();
+            List<Topic> topics = await JsonSerializer.DeserializeAsync<List<Topic>>(stream);
+            if(topics.Count > 0)
+            {
+                PrintListOfTopic(topics);
+            }
+            else
+            {
+                Console.WriteLine("ASD");
+            }
         }
         private async static Task GetListOfPostsInTopic(int id)
         {
             using var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync($"https://localhost:44300/forum/");
-            //TODO GetListOfPostsInTopic
+            HttpResponseMessage response = await client.GetAsync($"https://localhost:44300/forum/{id}");
+            response.EnsureSuccessStatusCode();
+            Stream stream = await response.Content.ReadAsStreamAsync();
+            List<Post> posts = await JsonSerializer.DeserializeAsync<List<Post>>(stream);
+            PrintListOfPosts(posts);
         }
-        private async static Task PostTopic(string nameOfTopic)
+        private async static Task PostNewTopic(string NameOfTopic, string Name)
         {
             using var client = new HttpClient();
-            HttpContent content = new StringContent(nameOfTopic);
+            NewTopicDTO topic = new NewTopicDTO(NameOfTopic, Name);
+            HttpContent content = new StringContent(JsonSerializer.Serialize(topic));
             HttpResponseMessage response = await client.PostAsync("https://localhost:44300/forum/", content);
+            response.EnsureSuccessStatusCode();
         }
-        private async static Task PostPost(int id, string message)
+        private async static Task PostNewMessage(int Id, string Message, string Name)
         {
             using var client = new HttpClient();
-            HttpContent content = new StringContent(message);
-            HttpResponseMessage response = await client.PostAsync($"https://localhost:44300/forum/{id}", content);
+            NewPostDTO post = new NewPostDTO(Message, Id, Name);
+            HttpContent content = new StringContent(JsonSerializer.Serialize(post));
+            HttpResponseMessage response = await client.PostAsync($"https://localhost:44300/forum/{Id}", content);
+            response.EnsureSuccessStatusCode();
+        }
+        private static void PrintListOfTopic(List<Topic> topics)
+        {
+            for (int i = 0; i < topics.Count; i++)
+            {
+                Console.WriteLine($"{topics[i].id}. Создал - {topics[i].Name}. Когда? {topics[i].Date}  \n{topics[i].Title}");
+            }
+        }
+        private static void PrintListOfPosts(List<Post> posts)
+        {
+            for (int i = 0; i < posts.Count; i++)
+            {
+                Console.WriteLine($"{posts[i].id}. Написал - {posts[i].Name}. Когда? {posts[i].Date}  \n{posts[i].Message}");
+            }
         }
     }
 }

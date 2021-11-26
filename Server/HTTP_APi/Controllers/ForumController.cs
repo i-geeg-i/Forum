@@ -43,18 +43,18 @@ namespace HTTP_APi.Controllers
             return new Topic(-1, new DateTime(), "Неверный номер темы!", "Creator");
         }
         [HttpPost]
-        public Models.Topic CreateNew([FromQuery] string name, [FromQuery] string title) //I know that I need use DTO!
+        public Topic CreateNew([FromBody] NewTopicDTO body)
         {
             KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
-            knowledgeCenter.topics.Add(new Topic(knowledgeCenter.GetNextId(), DateTime.UtcNow, title, name));
+            knowledgeCenter.topics.Add(new Topic(knowledgeCenter.GetNextId(), DateTime.UtcNow, body.Title, body.Name));
             return knowledgeCenter.topics[knowledgeCenter.topics.Count-1];
         }
         [HttpPost("{id}")]
-        public Post CreateNewPost([FromRoute] int id,[FromQuery] string name, [FromQuery] string post) //I know that I need use DTO! For test! I will make it better
+        public Post CreateNewPost([FromBody] NewPostDTO body)
         {
             KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
-            Topic topic = knowledgeCenter.topics[id];
-            topic.Posts.Add(new Post(topic.GetNextId(),DateTime.UtcNow,post,name));
+            Topic topic = knowledgeCenter.topics[body.TopicId];
+            topic.Posts.Add(new Post(topic.GetNextId(),DateTime.UtcNow,body.Message,body.Name));
             return topic.Posts[topic.Posts.Count - 1];
         }
     }
