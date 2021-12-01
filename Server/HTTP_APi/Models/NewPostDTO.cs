@@ -8,7 +8,6 @@ namespace HTTP_APi.Models
     public class NewPostDTO
     {
         public string Message { get; set; }
-        public int TopicId { get; set; }
         public string Name { get; set; }
     }
 }

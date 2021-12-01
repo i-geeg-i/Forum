@@ -19,7 +19,6 @@ namespace HTTP_APi.Controllers
         public ForumController(ILogger<WeatherForecastController> logger)
         {
             _logger = logger;
-            KnowledgeCenter.getInstance().topics.Add(new Topic(0, new DateTime(), "Добро пожаловать на форум!", "Owner"));
         }
 
         [HttpGet]
@@ -50,10 +49,10 @@ namespace HTTP_APi.Controllers
             return knowledgeCenter.topics[knowledgeCenter.topics.Count-1];
         }
         [HttpPost("{id}")]
-        public Post CreateNewPost([FromBody] NewPostDTO body)
+        public Post CreateNewPost([FromRoute] int id, [FromBody] NewPostDTO body)
         {
             KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
-            Topic topic = knowledgeCenter.topics[body.TopicId];
+            Topic topic = knowledgeCenter.topics[id];
             topic.Posts.Add(new Post(topic.GetNextId(),DateTime.UtcNow,body.Message,body.Name));
             return topic.Posts[topic.Posts.Count - 1];
         }

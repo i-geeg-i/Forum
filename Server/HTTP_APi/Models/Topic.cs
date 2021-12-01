@@ -16,6 +16,7 @@ namespace HTTP_APi.Models
         {
             this.id = id;
             this.Date = dateTime;
+            this.Title = Title;
             this.Name = name;
             this.Posts = new List<Post>();
             if(FirstPost != null)

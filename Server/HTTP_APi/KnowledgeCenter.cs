@@ -15,7 +15,10 @@ namespace HTTP_APi
         public static KnowledgeCenter getInstance()
         {
             if (instance == null)
+            {
                 instance = new KnowledgeCenter();
+                KnowledgeCenter.getInstance().topics.Add(new Topic(0, new DateTime(), "Добро пожаловать на форум!", "Owner"));
+            }
             return instance;
         }
         public int GetNextId()
