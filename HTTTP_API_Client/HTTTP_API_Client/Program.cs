@@ -18,7 +18,7 @@ namespace HTTTP_API_Client
             while (true)
             {
                 PrintMenu();
-                int numberFromUser = Ask(4);
+                int numberFromUser = Ask();
                 if (numberFromUser == 0)
                 {
                     await GetListOfTopics();
@@ -26,7 +26,7 @@ namespace HTTTP_API_Client
                 else if (numberFromUser == 1)
                 {
                     Console.WriteLine("Введите id темы: ");
-                    int topicId = AskTopicId(1);
+                    int topicId = Ask();
                     await GetListOfPostsInTopic(topicId);
                 }
                 else if (numberFromUser == 3)
@@ -38,7 +38,7 @@ namespace HTTTP_API_Client
                 else if (numberFromUser == 4)
                 {
                     Console.WriteLine("Введите id темы: ");
-                    int topicId = AskTopicId(1);
+                    int topicId = Ask();
                     Console.WriteLine("Введите cодержание поста: ");
                     string textOfPost = Console.ReadLine();
                     await PostNewMessage(topicId, textOfPost, Name);
@@ -53,14 +53,14 @@ namespace HTTTP_API_Client
             Console.WriteLine("3 - создать тему");
             Console.WriteLine("4 - создать пост в тему");
         }
-        private static int Ask(int max)
+        private static int Ask()
         {
-            Console.WriteLine($"Введите номер от 1 до {max}: ");
+            Console.WriteLine($"Введите номер: ");
             int fromClient = Convert.ToInt32(Console.ReadLine());
-            while(fromClient < 1 || fromClient > max)
+            while(fromClient < 0)
             {
                 Console.WriteLine("Вы ввели неверный номер!");
-                Console.WriteLine($"Введите номер от 1 до {max}: ");
+                Console.WriteLine($"Введите номер: ");
                 fromClient = Convert.ToInt32(Console.ReadLine());
             }
             return fromClient - 1;
@@ -71,18 +71,6 @@ namespace HTTTP_API_Client
             string Name = Console.ReadLine();
             return Name;
         }
-        private static int AskTopicId(int min = 0)
-        {
-            Console.WriteLine($"Введите номер: ");
-            int fromClient = Convert.ToInt32(Console.ReadLine());
-            while (fromClient < min)
-            {
-                Console.WriteLine("Вы ввели неверный номер!");
-                Console.WriteLine($"Введите номер темы: ");
-                fromClient = Convert.ToInt32(Console.ReadLine());
-            }
-            return fromClient - 1;
-        }
         private async static Task GetListOfTopics()
         {
             using var client = new HttpClient();
@@ -90,7 +78,7 @@ namespace HTTTP_API_Client
             response.EnsureSuccessStatusCode();
             Console.WriteLine(response);
             Stream stream = await response.Content.ReadAsStreamAsync();
-            List<Topic> topics = await JsonSerializer.DeserializeAsync<List<Topic>>(stream);
+            List<Topic> topics = await JsonSerializer.DeserializeAsync<List<Topic>>(stream); //TODO FIX!!!
             if(topics.Count > 0)
             {
                 PrintListOfTopic(topics);
