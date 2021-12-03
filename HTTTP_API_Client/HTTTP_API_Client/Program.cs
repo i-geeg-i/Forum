@@ -94,6 +94,7 @@ namespace HTTTP_API_Client
             HttpResponseMessage response = await client.GetAsync($"https://localhost:44300/forum/{id}");
             response.EnsureSuccessStatusCode();
             Stream stream = await response.Content.ReadAsStreamAsync();
+            //Console.WriteLine(await response.Content.ReadAsStringAsync());
             List<Post> posts = await JsonSerializer.DeserializeAsync<List<Post>>(stream);
             PrintListOfPosts(posts);
         }
@@ -124,7 +125,7 @@ namespace HTTTP_API_Client
         {
             for (int i = 0; i < posts.Count; i++)
             {
-                Console.WriteLine($"{posts[i].id}. Написал - {posts[i].Name}. Когда? {posts[i].Date}  \n{posts[i].Message}");
+                Console.WriteLine($"{posts[i].Id}. Написал - {posts[i].Name}. Когда? {posts[i].Date}  \n{posts[i].Message}");
             }
         }
     }

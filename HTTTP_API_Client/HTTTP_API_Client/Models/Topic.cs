@@ -7,14 +7,14 @@ namespace HTTP_APi.Models
 {
     public class Topic
     {
-        public int id { get; }
+        public int Id { get; }
         public DateTime Date { get; set; }
         public string Title { get; set; }
         public string Name { get; set; }
         public List<Post> Posts { get; set; }
         public Topic(int id, DateTime dateTime, string Title, string name)
         {
-            this.id = id;
+            this.Id = id;
             this.Date = dateTime;
             this.Title = Title;
             this.Name = name;
@@ -25,9 +25,9 @@ namespace HTTP_APi.Models
             int id = 0;
             for (int i =0; i < Posts.Count; i++)
             {
-                if(Posts[i].id >= id)
+                if(Posts[i].Id >= id)
                 {
-                    id = Posts[i].id + 1;
+                    id = Posts[i].Id + 1;
                 }
             }
             return id;

@@ -29,9 +29,9 @@ namespace HTTP_APi.Models
             int id = 0;
             for (int i =0; i < Posts.Count; i++)
             {
-                if(Posts[i].id >= id)
+                if(Posts[i].Id >= id)
                 {
-                    id = Posts[i].id + 1;
+                    id = Posts[i].Id + 1;
                 }
             }
             return id;

@@ -14,7 +14,7 @@ namespace HTTP_APi.Models
         public static TopicGetDTO FromTopic(Topic topic)
         {
             TopicGetDTO getDTO = new TopicGetDTO();
-            getDTO.Id = topic.id;
+            getDTO.Id = topic.Id;
             getDTO.Date = topic.Date;
             getDTO.Title = topic.Title;
             getDTO.Name = topic.Name;
