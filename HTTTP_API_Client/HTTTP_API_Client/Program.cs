@@ -75,7 +75,7 @@ namespace HTTTP_API_Client
         private async static Task GetListOfTopics()
         {
             using var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://localhost:44300/Forum");
+            HttpResponseMessage response = await client.GetAsync("https://localhost:44300/forum");
             response.EnsureSuccessStatusCode();
             Stream stream = await response.Content.ReadAsStreamAsync();
             List<TopicGetDTO> topics = await JsonSerializer.DeserializeAsync<List<TopicGetDTO>>(stream);
@@ -94,11 +94,10 @@ namespace HTTTP_API_Client
             HttpResponseMessage response = await client.GetAsync($"https://localhost:44300/forum/{id}");
             response.EnsureSuccessStatusCode();
             Stream stream = await response.Content.ReadAsStreamAsync();
-            Console.WriteLine(await JsonSerializer.DeserializeAsync<Topic>(stream)); //DEBAG
-            Topic posts = await JsonSerializer.DeserializeAsync<Topic>(stream);
+            List<Post> posts = await JsonSerializer.DeserializeAsync<List<Post>>(stream);
             PrintListOfPosts(posts);
         }
-        private async static Task PostNewTopic(string NameOfTopic, string Name) // work
+        private async static Task PostNewTopic(string NameOfTopic, string Name) 
         {
             using var client = new HttpClient();
             NewTopicDTO topic = new NewTopicDTO(NameOfTopic, Name);
@@ -121,11 +120,11 @@ namespace HTTTP_API_Client
                 Console.WriteLine($"{topics[i].Id}. Создал - {topics[i].Name}. Когда? {topics[i].Date}  \n{topics[i].Title}");
             }
         }
-        private static void PrintListOfPosts(Topic topic)
+        private static void PrintListOfPosts(List<Post> posts)
         {
-            for (int i = 0; i < topic.Posts.Count; i++)
+            for (int i = 0; i < posts.Count; i++)
             {
-                Console.WriteLine($"{topic.Posts[i].id}. Написал - {topic.Posts[i].Name}. Когда? {topic.Posts[i].Date}  \n{topic.Posts[i].Message}");
+                Console.WriteLine($"{posts[i].id}. Написал - {posts[i].Name}. Когда? {posts[i].Date}  \n{posts[i].Message}");
             }
         }
     }

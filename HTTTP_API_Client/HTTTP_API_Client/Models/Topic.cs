@@ -12,17 +12,13 @@ namespace HTTP_APi.Models
         public string Title { get; set; }
         public string Name { get; set; }
         public List<Post> Posts { get; set; }
-        public Topic(int id, DateTime dateTime, string Title, string name, Post FirstPost = null)
+        public Topic(int id, DateTime dateTime, string Title, string name)
         {
             this.id = id;
             this.Date = dateTime;
             this.Title = Title;
             this.Name = name;
             this.Posts = new List<Post>();
-            if(FirstPost != null)
-            {
-                Posts.Add(FirstPost);
-            }
         }
         public int GetNextId()
         {

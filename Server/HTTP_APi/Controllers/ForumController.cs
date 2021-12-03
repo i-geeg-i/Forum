@@ -27,19 +27,19 @@ namespace HTTP_APi.Controllers
             return TopicGetDTO.FromTopics(KnowledgeCenter.getInstance().topics);
         }
         [HttpGet("{id}")]
-        public Topic GetTopic([FromRoute] int id)
+        public List<Post> GetPostsInTopic([FromRoute] int id)
         {
             KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
             for (int i = 0; i < knowledgeCenter.topics.Count; i++)
             {
                 if (knowledgeCenter.topics[i].id == id)
                 {
-                    return knowledgeCenter.topics[i];
+                    return knowledgeCenter.topics[i].Posts;
                 }
 
             }
             HttpContext.Response.StatusCode = 404;
-            return new Topic(-1, new DateTime(), "Неверный номер темы!", "Creator");
+            return new List<Post> { new Post(-1, new DateTime(), "Неверный номер темы!", "Creator") };
         }
         [HttpPost]
         public Topic CreateNew([FromBody] NewTopicDTO body)
