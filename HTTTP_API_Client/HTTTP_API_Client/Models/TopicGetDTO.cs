@@ -11,13 +11,18 @@ namespace HTTP_APi.Models
         public DateTime Date { get; set; }
         public string Title { get; set; }
         public string Name { get; set; }
-        public static Topic FromTopic(Topic topic)
+        public static TopicGetDTO FromTopic(Topic topic)
         {
-            return new Topic(topic.id, topic.Date, topic.Title, topic.Name);
+            TopicGetDTO getDTO = new TopicGetDTO();
+            getDTO.Id = topic.id;
+            getDTO.Date = topic.Date;
+            getDTO.Title = topic.Title;
+            getDTO.Name = topic.Name;
+            return getDTO;
         }
-        public static List<Topic> FromTopics(List<Topic> topics)
+        public static List<TopicGetDTO> FromTopics(List<Topic> topics)
         {
-            List<Topic> topicGets = new List<Topic>();
+            List<TopicGetDTO> topicGets = new List<TopicGetDTO>();
             for(int i =0; i < topics.Count; i++)
             {
                 topicGets.Add(TopicGetDTO.FromTopic(topics[i]));

@@ -27,7 +27,7 @@ namespace HTTTP_API_Client
                 else if (numberFromUser == 1)
                 {
                     Console.WriteLine("Введите id темы: ");
-                    int topicId = Ask();
+                    int topicId = Ask() + 1;
                     await GetListOfPostsInTopic(topicId);
                 }
                 else if (numberFromUser == 2)
@@ -39,7 +39,7 @@ namespace HTTTP_API_Client
                 else if (numberFromUser == 3)
                 {
                     Console.WriteLine("Введите id темы: ");
-                    int topicId = Ask();
+                    int topicId = Ask()+1;
                     Console.WriteLine("Введите cодержание поста: ");
                     string textOfPost = Console.ReadLine();
                     await PostNewMessage(topicId, textOfPost, Name);
@@ -75,11 +75,10 @@ namespace HTTTP_API_Client
         private async static Task GetListOfTopics()
         {
             using var client = new HttpClient();
-            HttpResponseMessage response = await client.GetAsync("https://localhost:44300/forum/");
+            HttpResponseMessage response = await client.GetAsync("https://localhost:44300/Forum");
             response.EnsureSuccessStatusCode();
-            Console.WriteLine(response);
             Stream stream = await response.Content.ReadAsStreamAsync();
-            List<TopicGetDTO> topics = await JsonSerializer.DeserializeAsync<List<TopicGetDTO>>(stream); //TODO FIX!!!
+            List<TopicGetDTO> topics = await JsonSerializer.DeserializeAsync<List<TopicGetDTO>>(stream);
             if(topics.Count > 0)
             {
                 PrintListOfTopic(topics);
@@ -95,23 +94,24 @@ namespace HTTTP_API_Client
             HttpResponseMessage response = await client.GetAsync($"https://localhost:44300/forum/{id}");
             response.EnsureSuccessStatusCode();
             Stream stream = await response.Content.ReadAsStreamAsync();
+            Console.WriteLine(await JsonSerializer.DeserializeAsync<Topic>(stream)); //DEBAG
             Topic posts = await JsonSerializer.DeserializeAsync<Topic>(stream);
             PrintListOfPosts(posts);
         }
-        private async static Task PostNewTopic(string NameOfTopic, string Name)
+        private async static Task PostNewTopic(string NameOfTopic, string Name) // work
         {
             using var client = new HttpClient();
             NewTopicDTO topic = new NewTopicDTO(NameOfTopic, Name);
             HttpContent content = JsonContent.Create(topic);
-            HttpResponseMessage response = await client.PostAsync("https://localhost:44300/forum/", content);
+            HttpResponseMessage response = await client.PostAsync("https://localhost:44300/Forum/", content);
             response.EnsureSuccessStatusCode();
         }
         private async static Task PostNewMessage(int Id, string Message, string Name)
         {
             using var client = new HttpClient();
-            NewPostDTO post = new NewPostDTO(Message, Id, Name);
+            NewPostDTO post = new NewPostDTO(Message, Name);
             HttpContent content = JsonContent.Create(post);
-            HttpResponseMessage response = await client.PostAsync($"https://localhost:44300/forum/{Id}", content);
+            HttpResponseMessage response = await client.PostAsync($"https://localhost:44300/Forum/{Id}", content);
             response.EnsureSuccessStatusCode();
         }
         private static void PrintListOfTopic(List<TopicGetDTO> topics)

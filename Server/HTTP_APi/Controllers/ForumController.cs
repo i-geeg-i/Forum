@@ -22,12 +22,12 @@ namespace HTTP_APi.Controllers
         }
 
         [HttpGet]
-        public List<Topic> Get()
+        public List<TopicGetDTO> Get()
         {
             return TopicGetDTO.FromTopics(KnowledgeCenter.getInstance().topics);
         }
         [HttpGet("{id}")]
-        public Topic GettTopic([FromRoute] int id)
+        public Topic GetTopic([FromRoute] int id)
         {
             KnowledgeCenter knowledgeCenter = KnowledgeCenter.getInstance();
             for (int i = 0; i < knowledgeCenter.topics.Count; i++)
