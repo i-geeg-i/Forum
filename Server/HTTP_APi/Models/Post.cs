@@ -8,12 +8,12 @@ namespace HTTP_APi
         public DateTime Date { get; set; }
         public string Name { get; set; }
         public string Message { get; set; }
-        public Post(int id, DateTime dateTime, string post, string name)
+        public Post(int id, DateTime date, string name, string message)
         {
             this.Id = id;
-            this.Date = dateTime;
-            this.Message = post;
+            this.Date = date;
             this.Name = name;
+            this.Message = message;
         }
     }
 }
